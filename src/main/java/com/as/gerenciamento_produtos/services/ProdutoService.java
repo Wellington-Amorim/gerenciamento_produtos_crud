@@ -24,13 +24,13 @@ public class ProdutoService {
         return produtoRepository.save(produtoModel);
     }
 
-    public ProdutoModel buscarId(Long id) {
+    public ProdutoModel buscarPorId(Long id) {
         return produtoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado com id: " + id));
     }
 
     public ProdutoModel atualizar(Long id, ProdutoModel produtoModel) {
-        ProdutoModel model = buscarId(id);
+        ProdutoModel model = buscarPorId(id);
         model.setNome(produtoModel.getNome());
         model.setPreco(produtoModel.getPreco());
         model.setEstoque(produtoModel.getEstoque());
@@ -38,7 +38,7 @@ public class ProdutoService {
     }
 
     public void deletar(Long id) {
-        buscarId(id);
+        buscarPorId(id);
         produtoRepository.deleteById(id);
     }
 }

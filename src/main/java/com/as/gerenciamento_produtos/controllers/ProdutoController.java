@@ -35,8 +35,8 @@ public class ProdutoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoModel> buscarId(@PathVariable Long id) {
-        return ResponseEntity.ok(produtoService.buscarId(id));
+    public ResponseEntity<ProdutoModel> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(produtoService.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
