@@ -1,18 +1,20 @@
 package com.as.gerenciamento_produtos.services;
 
 import com.as.gerenciamento_produtos.models.ProdutoModel;
+import com.as.gerenciamento_produtos.exceptions.RecursoNaoEncontradoException;
 import com.as.gerenciamento_produtos.repositories.ProdutoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProdutoService {
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    private final ProdutoRepository produtoRepository;
+
+    public ProdutoService(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
+    }
 
     public List<ProdutoModel> listar() {
         return produtoRepository.findAll();
@@ -22,12 +24,13 @@ public class ProdutoService {
         return produtoRepository.save(produtoModel);
     }
 
-    public Optional<ProdutoModel> buscarId(Long id) {
-        return produtoRepository.findById(id);
+    public ProdutoModel buscarPorId(Long id) {
+        return produtoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado com id: " + id));
     }
 
     public ProdutoModel atualizar(Long id, ProdutoModel produtoModel) {
-        ProdutoModel model = produtoRepository.findById(id).get();
+        ProdutoModel model = buscarPorId(id);
         model.setNome(produtoModel.getNome());
         model.setPreco(produtoModel.getPreco());
         model.setEstoque(produtoModel.getEstoque());
@@ -35,6 +38,7 @@ public class ProdutoService {
     }
 
     public void deletar(Long id) {
+        buscarPorId(id);
         produtoRepository.deleteById(id);
     }
 }
